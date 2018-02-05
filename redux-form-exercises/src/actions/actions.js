@@ -1,20 +1,20 @@
 import {SubmissionError} from 'redux-form';
 
 export const complain = values => dispatch => {
-  return fetch('', {
+  return fetch('https://us-central1-delivery-form-api.cloudfunctions.net/api/report', {
     method: 'POST',
     body: JSON.stringify(values),
     headers: {
-
+      'Content-Type': 'application/json'
     }
   })
   .then(res => {
     if (!res.ok){
       if (
-        res.headers.has('') && 
+        res.headers.has('content-type') && 
         res.headers
-          .get('')
-          .startsWith('')
+          .get('content-type')
+          .startsWith('application/json')
       ) {
         return res.json().then(err => Promise.reject(err));
       }

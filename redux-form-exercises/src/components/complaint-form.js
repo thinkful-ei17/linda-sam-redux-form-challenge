@@ -6,14 +6,32 @@ import {complain} from '../actions/actions';
 
 export class ComplaintForm extends React.Component{
   onSubmit(values) {
-    console.log('what is value for onSubmit', values);
-    //return this.props.dispatch(complain(values));
+    return this.props.dispatch(complain(values));
   }
   render() {
+    let successMessage;
+    if (this.props.submitSucceeded) {
+      successMessage = (
+          <div className="message message-success">
+              Complaint successfully submitted. We're sorry about the inconvenience.
+          </div>
+      );
+  }
+
+  let errorMessage;
+  if (this.props.error) {
+      errorMessage = (
+          <div className="message message-error">{this.props.error}</div>
+      );
+  }
+    
     return (
       <form onSubmit={this.props.handleSubmit(values => this.onSubmit(values))}>
-          <Field component={Input} type="text" element="input" name="trackingNumber" value="" id="trackingNumber" validate={[required, notEmpty, characterType, correctCharLength]} label="Tracking number"/>
-          <Field component={Input} type="select" element="select" name="issue" id="issue" label="What is your issue?">
+        {successMessage}
+        {errorMessage}
+          <Field component={Input} type="text" element="input" name="trackingNumber" value="" id="trackingNumber" validate={[required, notEmpty, correctCharLength, characterType]} label="Tracking number"/>
+          <Field component={Input} element="select" name="issue" id="issue" label="What is your issue?">
+            <option value='' disabled>Please Select</option>
             <option value="not-delivered">My delivery hasn't arrived</option>
             <option value="wrong-item">The wrong item was delivered</option>
             <option value="missing-part">Part of my order was missing</option>
@@ -28,7 +46,10 @@ export class ComplaintForm extends React.Component{
 }  
 
 export default reduxForm({
-  form: 'complaint'
+  form: 'complaint',
+  initialValues: { issue: "" }
 })(ComplaintForm);
 
-//QUESTION - what is type used for???? not needed for select element
+// QUESTION - what is type used for???? not needed for select element
+// QUESTION - how do you set default value in select?
+// No specific error for 
